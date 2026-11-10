@@ -14,5 +14,6 @@ export const celebrantContent: Celebrant = {
   heroPhotograph: "/images/photo-01.jpg",
   openingPhotograph: "/images/photo-02.jpg",
   closingPhotograph: "/images/epilogue-master.jpg",
+  spotifyPlaylistUrl: "https://open.spotify.com/playlist/1xFk6OYpQB6aRGRFuV4aUy?si=TRvkuXnjTROEbJJFAIWHUg&utm_source=copy-link&pt=9c520339a4a9211ad804b3bc2eb844bd&pi=8CDgUonBSBeLN",
 };
 

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { Menu, BookOpen, Printer } from "lucide-react";
+import { Menu, BookOpen, Printer, Music } from "lucide-react";
 import { chaptersMeta } from "@/content/chapters";
+import { celebrantContent } from "@/content/celebrant";
 import { scrollToSection, cn } from "@/lib/utils";
 import MobileIndex from "./MobileIndex";
 import ChapterIndicator from "./ChapterIndicator";
@@ -140,6 +141,20 @@ export default function EditorialNavigation({ onOpenKeepsake }: NavigationProps)
                 <Printer className="w-3.5 h-3.5" />
                 <span>KEEPSAKE</span>
               </button>
+            )}
+
+            {/* Spotify Soundtrack Trigger */}
+            {celebrantContent.spotifyPlaylistUrl && (
+              <a
+                href={celebrantContent.spotifyPlaylistUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Listen to The Soundtrack of Her on Spotify"
+                className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 border border-warm-grey bg-cream/50 hover:bg-espresso hover:text-ivory hover:border-espresso text-charcoal text-[11px] font-mono uppercase tracking-wider rounded transition-colors group"
+              >
+                <Music className="w-3.5 h-3.5 text-burgundy group-hover:text-[#1DB954] transition-colors" />
+                <span>SOUNDTRACK</span>
+              </a>
             )}
 
             {/* Index Trigger (Available on all screens, especially mobile) */}

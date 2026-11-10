@@ -7,7 +7,7 @@ import {
   useTransform,
   useReducedMotion,
 } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Music, ExternalLink } from "lucide-react";
 import { LUXE_EASE } from "@/components/motion/ScrollReveal";
 import { celebrantContent } from "@/content/celebrant";
 import { scrollToSection } from "@/lib/utils";
@@ -56,7 +56,19 @@ export default function Cover({ onImageClick }: CoverProps) {
           <span className="w-2 h-2 rounded-full bg-burgundy/60" />
           <span>A PRIVATE BIRTHDAY SPECIAL EDITION</span>
         </div>
-        <div className="text-right">
+        <div className="flex items-center space-x-4">
+          {celebrantContent.spotifyPlaylistUrl && (
+            <a
+              href={celebrantContent.spotifyPlaylistUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center space-x-1.5 text-burgundy hover:text-charcoal font-semibold transition-colors"
+              title="Official Spotify Playlist"
+            >
+              <Music className="w-3.5 h-3.5" />
+              <span>PLAYLIST ↗</span>
+            </a>
+          )}
           <span>VOL. 32 / FOLIO 01</span>
         </div>
       </motion.div>
@@ -206,7 +218,7 @@ export default function Cover({ onImageClick }: CoverProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.5, ease: LUXE_EASE }}
-          className="mt-6 text-center max-w-2xl mx-auto px-4"
+          className="mt-6 text-center max-w-2xl mx-auto px-4 flex flex-col items-center"
         >
           <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.25em] text-burgundy font-medium">
             {celebrantContent.tagline}
@@ -214,6 +226,42 @@ export default function Cover({ onImageClick }: CoverProps) {
           <p className="mt-2 text-sm sm:text-base font-serif italic text-taupe">
             {celebrantContent.supportingStatement}
           </p>
+
+          {/* Hero Soundtrack Button Nav */}
+          {celebrantContent.spotifyPlaylistUrl && (
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.65, ease: LUXE_EASE }}
+              className="mt-5"
+            >
+              <a
+                href={celebrantContent.spotifyPlaylistUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center space-x-3 px-5 py-2.5 rounded-full bg-cream/90 hover:bg-espresso text-charcoal hover:text-ivory border border-warm-grey/80 hover:border-espresso transition-all duration-300 shadow-sm hover:shadow-lg backdrop-blur-sm focus:outline-none"
+                aria-label="Listen to The Soundtrack of Her on Spotify"
+              >
+                {/* Audio Equalizer wave animation */}
+                <span className="flex items-end space-x-0.5 h-3.5 w-3.5 text-burgundy group-hover:text-[#1DB954] transition-colors">
+                  <span className="w-0.5 h-2 bg-current rounded-full animate-pulse" />
+                  <span className="w-0.5 h-3.5 bg-current rounded-full animate-pulse [animation-delay:150ms]" />
+                  <span className="w-0.5 h-1.5 bg-current rounded-full animate-pulse [animation-delay:300ms]" />
+                  <span className="w-0.5 h-3 bg-current rounded-full animate-pulse [animation-delay:75ms]" />
+                </span>
+
+                <span className="text-[11px] font-mono tracking-[0.2em] uppercase font-semibold">
+                  THE SOUNDTRACK OF HER
+                </span>
+
+                <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-burgundy/10 text-burgundy group-hover:bg-[#1DB954]/20 group-hover:text-[#1DB954] uppercase tracking-wider transition-colors">
+                  SPOTIFY
+                </span>
+
+                <ExternalLink className="w-3.5 h-3.5 text-taupe group-hover:text-ivory transition-colors" />
+              </a>
+            </motion.div>
+          )}
         </motion.div>
       </div>
 

@@ -2,8 +2,9 @@
 
 import React, { useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowRight, Music, ExternalLink } from "lucide-react";
 import { ChapterMeta } from "@/types";
+import { celebrantContent } from "@/content/celebrant";
 import { cn } from "@/lib/utils";
 
 interface MobileIndexProps {
@@ -120,6 +121,25 @@ export default function MobileIndex({
               })}
             </motion.ul>
           </nav>
+
+          {/* Spotify Soundtrack Link in Mobile Index */}
+          {celebrantContent.spotifyPlaylistUrl && (
+            <a
+              href={celebrantContent.spotifyPlaylistUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="my-3 flex items-center justify-between p-3.5 bg-white/5 border border-ivory/15 hover:border-burgundy rounded transition-colors text-ivory text-xs font-mono tracking-widest uppercase group"
+            >
+              <span className="flex items-center space-x-2.5">
+                <Music className="w-4 h-4 text-burgundy group-hover:text-[#1DB954] transition-colors" />
+                <span>THE SOUNDTRACK OF HER</span>
+              </span>
+              <span className="text-[10px] text-ivory/60 font-sans tracking-normal italic flex items-center space-x-1">
+                <span>Spotify</span>
+                <ExternalLink className="w-3 h-3" />
+              </span>
+            </a>
+          )}
 
           {/* Footer Colophon Note */}
           <div className="border-t border-ivory/15 pt-4 flex justify-between items-center text-[10px] font-mono tracking-widest text-ivory/40 uppercase">

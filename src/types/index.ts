@@ -12,6 +12,7 @@ export interface Celebrant {
   issueNumber: string;
   tagline: string;
   supportingStatement: string;
+  spotifyPlaylistUrl?: string;
 }
 
 export interface ChapterMeta {
