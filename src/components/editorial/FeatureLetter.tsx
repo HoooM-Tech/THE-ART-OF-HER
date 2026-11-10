@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { EditorialLetter } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -13,10 +16,17 @@ export default function FeatureLetter({
   onImageClick,
   className,
 }: FeatureLetterProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
-    <article
+    <motion.article
+      initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.85, ease: [0.16, 1, 0.3, 1] as const }}
+      style={{ willChange: "transform, opacity" }}
       className={cn(
-        "relative bg-cream/35 border-t border-b md:border border-warm-grey p-6 sm:p-10 md:p-14 my-12 md:my-20 transition-all",
+        "relative bg-cream/35 border-t border-b md:border border-warm-grey p-6 sm:p-10 md:p-14 my-12 md:my-20 transition-all shadow-sm",
         className
       )}
     >
@@ -83,7 +93,6 @@ export default function FeatureLetter({
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
-

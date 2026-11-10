@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Printer, BookOpen, Heart } from "lucide-react";
 import { celebrantContent } from "@/content/celebrant";
 import { openingEditorLetter, editorialLetters } from "@/content/letters";
@@ -13,6 +14,8 @@ interface KeepsakeModalProps {
 }
 
 export default function KeepsakeModal({ isOpen, onClose }: KeepsakeModalProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -24,19 +27,23 @@ export default function KeepsakeModal({ isOpen, onClose }: KeepsakeModalProps) {
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
-
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-espresso/90 backdrop-blur-md flex flex-col items-center p-4 sm:p-8"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Keepsake Magazine Edition"
-    >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+          className="fixed inset-0 z-50 overflow-y-auto bg-espresso/90 backdrop-blur-md flex flex-col items-center p-4 sm:p-8"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Keepsake Magazine Edition"
+        >
       {/* Top Action Bar */}
       <div className="w-full max-w-4xl bg-ivory border-b border-warm-grey p-4 flex items-center justify-between shadow-lg sticky top-0 z-10 no-print">
         <div className="flex items-center space-x-3">
@@ -302,6 +309,8 @@ export default function KeepsakeModal({ isOpen, onClose }: KeepsakeModalProps) {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </motion.div>
+  )}
+</AnimatePresence>
+);
 }

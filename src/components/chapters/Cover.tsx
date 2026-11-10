@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import { ArrowDown } from "lucide-react";
+import { LUXE_EASE } from "@/components/motion/ScrollReveal";
 import { celebrantContent } from "@/content/celebrant";
 import { scrollToSection } from "@/lib/utils";
 
@@ -10,23 +17,35 @@ interface CoverProps {
 }
 
 export default function Cover({ onImageClick }: CoverProps) {
-  const [mounted, setMounted] = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Scroll parallax for cover elements
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const mastheadY = useTransform(scrollYProgress, [0, 1], [0, 110]);
+  const mastheadOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0.15]);
+  const portraitY = useTransform(scrollYProgress, [0, 1], [0, 45]);
+  const sideLeftX = useTransform(scrollYProgress, [0, 1], [0, -25]);
+  const sideRightX = useTransform(scrollYProgress, [0, 1], [0, 25]);
+  const promptOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
 
   return (
     <section
+      ref={containerRef}
       id="chapter-01-cover"
       className="relative min-h-[92vh] md:min-h-screen flex flex-col justify-between pt-4 pb-12 px-4 sm:px-6 lg:px-12 overflow-hidden border-b border-warm-grey"
       aria-label="Magazine Cover — Issue 032"
     >
       {/* Top Editorial Metadata Banner */}
-      <div
-        className={`w-full flex flex-wrap items-center justify-between border-b border-warm-grey/80 pb-3 text-[11px] sm:text-xs font-mono uppercase tracking-widest text-taupe transition-all duration-700 ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
-        }`}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: LUXE_EASE }}
+        className="w-full flex flex-wrap items-center justify-between border-b border-warm-grey/80 pb-3 text-[11px] sm:text-xs font-mono uppercase tracking-widest text-taupe"
       >
         <div className="flex items-center space-x-3">
           <span className="font-semibold text-burgundy">{celebrantContent.issueNumber}</span>
@@ -40,28 +59,39 @@ export default function Cover({ onImageClick }: CoverProps) {
         <div className="text-right">
           <span>VOL. 32 / FOLIO 01</span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Cover Composition */}
       <div className="relative my-auto py-6 sm:py-8 flex flex-col items-center justify-center">
-        {/* Massive Editorial Masthead Overlap */}
-        <div
-          className={`w-full text-center select-none transition-all duration-1000 delay-100 z-10 ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-          }`}
+        {/* Massive Editorial Masthead Overlap with Parallax */}
+        <motion.div
+          style={{
+            y: shouldReduceMotion ? 0 : mastheadY,
+            opacity: shouldReduceMotion ? 1 : mastheadOpacity,
+            willChange: "transform, opacity",
+          }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, delay: 0.1, ease: LUXE_EASE }}
+          className="w-full text-center select-none z-10"
         >
           <h1 className="font-serif text-[14vw] sm:text-[13vw] md:text-[11vw] lg:text-[10rem] font-light tracking-[-0.04em] leading-[0.88] text-charcoal uppercase">
             THE ART OF HER
           </h1>
-        </div>
+        </motion.div>
 
         {/* Hero Visual Portrait Frame with Editorial Side Notes */}
         <div className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-center -mt-4 sm:-mt-8 md:-mt-12 z-20">
           {/* Left Editorial Teaser Annotations */}
-          <div
-            className={`hidden md:block md:col-span-3 text-right space-y-6 transition-all duration-700 delay-300 ${
-              mounted ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
-            }`}
+          <motion.div
+            style={{
+              x: shouldReduceMotion ? 0 : sideLeftX,
+              willChange: "transform",
+            }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.3, ease: LUXE_EASE }}
+            className="hidden md:block md:col-span-3 text-right space-y-6"
           >
             <div className="border-r-2 border-burgundy pr-4 space-y-1">
               <p className="text-[10px] font-mono tracking-widest uppercase text-burgundy font-semibold">
@@ -83,13 +113,18 @@ export default function Cover({ onImageClick }: CoverProps) {
                 Letters from the inner circle, 32 reasons we love you, and the photographic archive.
               </p>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Centerpiece Dominant Portrait (60-80% viewport) */}
-          <div
-            className={`md:col-span-6 flex flex-col items-center transition-all duration-1000 delay-200 ${
-              mounted ? "opacity-100 scale-100" : "opacity-0 scale-[0.98]"
-            }`}
+          {/* Centerpiece Dominant Portrait (60-80% viewport) with Parallax */}
+          <motion.div
+            style={{
+              y: shouldReduceMotion ? 0 : portraitY,
+              willChange: "transform",
+            }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.1, delay: 0.2, ease: LUXE_EASE }}
+            className="md:col-span-6 flex flex-col items-center"
           >
             <div
               onClick={() => onImageClick && onImageClick(celebrantContent.heroPhotograph)}
@@ -115,13 +150,18 @@ export default function Cover({ onImageClick }: CoverProps) {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Editorial Annotations & Barcode Spec */}
-          <div
-            className={`hidden md:block md:col-span-3 space-y-6 transition-all duration-700 delay-400 ${
-              mounted ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-            }`}
+          <motion.div
+            style={{
+              x: shouldReduceMotion ? 0 : sideRightX,
+              willChange: "transform",
+            }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: LUXE_EASE }}
+            className="hidden md:block md:col-span-3 space-y-6"
           >
             <div className="border-l-2 border-warm-grey pl-4 space-y-1">
               <p className="text-[10px] font-mono tracking-widest uppercase text-burgundy font-semibold">
@@ -158,14 +198,15 @@ export default function Cover({ onImageClick }: CoverProps) {
                 32ND BIRTHDAY EDITION
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Supporting Headline Banner */}
-        <div
-          className={`mt-6 text-center max-w-2xl mx-auto px-4 transition-all duration-700 delay-500 ${
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-          }`}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.5, ease: LUXE_EASE }}
+          className="mt-6 text-center max-w-2xl mx-auto px-4"
         >
           <p className="font-sans text-xs sm:text-sm uppercase tracking-[0.25em] text-burgundy font-medium">
             {celebrantContent.tagline}
@@ -173,14 +214,19 @@ export default function Cover({ onImageClick }: CoverProps) {
           <p className="mt-2 text-sm sm:text-base font-serif italic text-taupe">
             {celebrantContent.supportingStatement}
           </p>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Subtle Interaction Prompt */}
-      <div
-        className={`w-full flex justify-center pt-2 transition-all duration-700 delay-700 ${
-          mounted ? "opacity-100" : "opacity-0"
-        }`}
+      {/* Subtle Interaction Prompt (fades out as you scroll down) */}
+      <motion.div
+        style={{
+          opacity: shouldReduceMotion ? 1 : promptOpacity,
+          willChange: "opacity",
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        className="w-full flex justify-center pt-2"
       >
         <button
           onClick={() => scrollToSection("chapter-02-letter")}
@@ -192,8 +238,7 @@ export default function Cover({ onImageClick }: CoverProps) {
           </span>
           <ArrowDown className="w-4 h-4 animate-bounce text-burgundy" />
         </button>
-      </div>
+      </motion.div>
     </section>
   );
 }
-

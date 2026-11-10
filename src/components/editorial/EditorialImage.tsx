@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Maximize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ImageCaption from "./ImageCaption";
@@ -35,6 +36,7 @@ export default function EditorialImage({
 }: EditorialImageProps) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (imgRef.current && imgRef.current.complete) {
@@ -50,7 +52,23 @@ export default function EditorialImage({
   };
 
   return (
-    <figure className={cn("group relative flex flex-col", bleed && "-mx-4 sm:-mx-8 lg:-mx-16", className)}>
+    <motion.figure
+      initial={{
+        opacity: shouldReduceMotion ? 1 : 0,
+        y: shouldReduceMotion ? 0 : 24,
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+      }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{
+        duration: shouldReduceMotion ? 0 : 0.8,
+        ease: [0.16, 1, 0.3, 1] as const,
+      }}
+      style={{ willChange: "transform, opacity" }}
+      className={cn("group relative flex flex-col", bleed && "-mx-4 sm:-mx-8 lg:-mx-16", className)}
+    >
       <div
         onClick={onClick}
         className={cn(
@@ -87,7 +105,6 @@ export default function EditorialImage({
         plateNumber={plateNumber}
         theme={theme}
       />
-    </figure>
+    </motion.figure>
   );
 }
-

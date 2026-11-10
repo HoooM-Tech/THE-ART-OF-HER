@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { Menu, BookOpen, Printer } from "lucide-react";
 import { chaptersMeta } from "@/content/chapters";
 import { scrollToSection, cn } from "@/lib/utils";
@@ -15,6 +16,14 @@ export default function EditorialNavigation({ onOpenKeepsake }: NavigationProps)
   const [activeChapterId, setActiveChapterId] = useState<string>("chapter-01-cover");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileIndexOpen, setIsMobileIndexOpen] = useState(false);
+
+  // Global reading progress bar
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 280,
+    damping: 32,
+    restDelta: 0.001,
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,10 +62,16 @@ export default function EditorialNavigation({ onOpenKeepsake }: NavigationProps)
         className={cn(
           "sticky top-0 z-40 w-full transition-all duration-300 no-print",
           isScrolled
-            ? "bg-ivory/90 backdrop-blur-md border-b border-warm-grey/60 py-3.5 shadow-sm"
+            ? "bg-ivory/95 backdrop-blur-md border-b border-warm-grey/60 py-3.5 shadow-sm"
             : "bg-transparent py-5 border-b border-transparent"
         )}
       >
+        {/* Subtle Reading Progress Line */}
+        <motion.div
+          style={{ scaleX, willChange: "transform" }}
+          className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-burgundy via-burgundy to-espresso origin-left z-50 pointer-events-none"
+        />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Masthead / Brand */}
           <div className="flex items-center space-x-4">
@@ -95,7 +110,11 @@ export default function EditorialNavigation({ onOpenKeepsake }: NavigationProps)
                 >
                   {link.label}
                   {isCurrent && (
-                    <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-burgundy rounded-full" />
+                    <motion.span
+                      layoutId="navUnderline"
+                      className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-burgundy rounded-full"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
                   )}
                 </button>
               );

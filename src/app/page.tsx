@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import SmoothScroll from "@/components/motion/SmoothScroll";
 import EditorialNavigation from "@/components/navigation/EditorialNavigation";
 import Cover from "@/components/chapters/Cover";
 import OpeningLetter from "@/components/chapters/OpeningLetter";
@@ -32,54 +33,56 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen bg-ivory text-charcoal font-sans selection:bg-burgundy selection:text-ivory">
-      {/* Sticky Editorial Navigation */}
-      <EditorialNavigation onOpenKeepsake={() => setIsKeepsakeOpen(true)} />
+    <SmoothScroll>
+      <div className="relative min-h-screen bg-ivory text-charcoal font-sans selection:bg-burgundy selection:text-ivory">
+        {/* Sticky Editorial Navigation */}
+        <EditorialNavigation onOpenKeepsake={() => setIsKeepsakeOpen(true)} />
 
-      {/* Main Single-Page Editorial Flow */}
-      <main id="main-content" className="relative">
-        {/* CHAPTER 01: THE COVER */}
-        <Cover onImageClick={handleImageClick} />
+        {/* Main Single-Page Editorial Flow */}
+        <main id="main-content" className="relative">
+          {/* CHAPTER 01: THE COVER */}
+          <Cover onImageClick={handleImageClick} />
 
-        {/* CHAPTER 02: DEAR TOSIN */}
-        <OpeningLetter onImageClick={handleImageClick} />
+          {/* CHAPTER 02: DEAR TOSIN */}
+          <OpeningLetter onImageClick={handleImageClick} />
 
-        {/* CHAPTER 03: THE ART OF BEING HER */}
-        <PersonalityProfile onImageClick={handleImageClick} />
+          {/* CHAPTER 03: THE ART OF BEING HER */}
+          <PersonalityProfile onImageClick={handleImageClick} />
 
-        {/* CHAPTER 04: THE YEARS THAT MADE HER */}
-        <ThroughTheYears onImageClick={handleImageClick} />
+          {/* CHAPTER 04: THE YEARS THAT MADE HER */}
+          <ThroughTheYears onImageClick={handleImageClick} />
 
-        {/* CHAPTER 05: THE PEOPLE, THE PLACES, THE MEMORIES */}
-        <PhotoDiaries onImageClick={handleImageClick} />
+          {/* CHAPTER 05: THE PEOPLE, THE PLACES, THE MEMORIES */}
+          <PhotoDiaries onImageClick={handleImageClick} />
 
-        {/* CHAPTER 06: THROUGH THEIR EYES */}
-        <ThroughTheirEyes onImageClick={handleImageClick} />
+          {/* CHAPTER 06: THROUGH THEIR EYES */}
+          <ThroughTheirEyes onImageClick={handleImageClick} />
 
-        {/* CHAPTER 07: 32 REASONS WE LOVE YOU */}
-        <ThirtyTwoReasons onImageClick={handleImageClick} />
+          {/* CHAPTER 07: 32 REASONS WE LOVE YOU */}
+          <ThirtyTwoReasons onImageClick={handleImageClick} />
 
-        {/* CHAPTER 08: THE NEXT CHAPTER */}
-        <FinalChapter
-          onImageClick={handleImageClick}
-          onOpenKeepsake={() => setIsKeepsakeOpen(true)}
+          {/* CHAPTER 08: THE NEXT CHAPTER */}
+          <FinalChapter
+            onImageClick={handleImageClick}
+            onOpenKeepsake={() => setIsKeepsakeOpen(true)}
+          />
+        </main>
+
+        {/* Interactive Lightbox Viewer */}
+        <ImageLightbox
+          photos={editorialPhotographs}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onNavigate={(newIndex) => setLightboxIndex(newIndex)}
         />
-      </main>
 
-      {/* Interactive Lightbox Viewer */}
-      <ImageLightbox
-        photos={editorialPhotographs}
-        currentIndex={lightboxIndex}
-        onClose={() => setLightboxIndex(null)}
-        onNavigate={(newIndex) => setLightboxIndex(newIndex)}
-      />
-
-      {/* Optional Keepsake Magazine Edition Modal */}
-      <KeepsakeModal
-        isOpen={isKeepsakeOpen}
-        onClose={() => setIsKeepsakeOpen(false)}
-      />
-    </div>
+        {/* Optional Keepsake Magazine Edition Modal */}
+        <KeepsakeModal
+          isOpen={isKeepsakeOpen}
+          onClose={() => setIsKeepsakeOpen(false)}
+        />
+      </div>
+    </SmoothScroll>
   );
 }
 

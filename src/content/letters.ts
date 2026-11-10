@@ -5,7 +5,7 @@ export const openingEditorLetter = {
   subtitle: "A Letter from the Curators",
   celebrantPortrait: "/images/photo-02.jpg",
   body: [
-    "If you are reading this, it means the secret we have kept for months has finally found its way to you. Welcome to your private edition—a living magazine curated not from a newsstand, but from thirty-two years of life, laughter, and the indelible imprint you have left upon our hearts.",
+    "If you are reading this, it means the secret we kept for months (actually just One week really) has finally found its way to you. Welcome to your private edition—a living magazine curated not from a newsstand, but from thirty-two years of life, laughter, and the indelible imprint you have left upon our hearts.",
     "Conventional celebrations never felt quite adequate for someone like you. You don’t live your life in ordinary strokes; you live with an intentional grace, a rare generosity of spirit, and an enduring warmth that transforms every room you enter.",
     "So we created this publication: an editorial archive of your journey so far. Within these pages, you will discover forgotten moments, familiar faces, heartfelt letters from those who hold you dear, and thirty-two distinct reminders of why you are celebrated today and every day.",
     "Take your time with every chapter. This was built to honor the woman you were, celebrate the woman you are, and welcome the breathtaking future waiting for you.",

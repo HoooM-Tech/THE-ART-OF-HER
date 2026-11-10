@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { EditorialLetter } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -15,8 +18,15 @@ export default function StandardLetter({
   reverse = false,
   className,
 }: StandardLetterProps) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
-    <article
+    <motion.article
+      initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+      style={{ willChange: "transform, opacity" }}
       className={cn(
         "py-10 md:py-16 border-b border-warm-grey/50",
         className
@@ -28,7 +38,7 @@ export default function StandardLetter({
           <div className={cn("md:col-span-5", reverse ? "md:order-2" : "md:order-1")}>
             <div
               onClick={() => onImageClick && onImageClick(letter.image!)}
-              className="relative overflow-hidden cursor-pointer group bg-cream border border-warm-grey/40"
+              className="relative overflow-hidden cursor-pointer group bg-cream border border-warm-grey/40 shadow-sm"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -69,7 +79,6 @@ export default function StandardLetter({
           </div>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
-

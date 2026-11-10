@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface ChapterHeaderProps {
@@ -25,9 +28,59 @@ export default function ChapterHeader({
   className,
 }: ChapterHeaderProps) {
   const isDark = theme === "dark";
+  const shouldReduceMotion = useReducedMotion();
+
+  const containerVariants = {
+    hidden: { opacity: shouldReduceMotion ? 1 : 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: shouldReduceMotion ? 0 : 0.12,
+        delayChildren: shouldReduceMotion ? 0 : 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: {
+      opacity: shouldReduceMotion ? 1 : 0,
+      y: shouldReduceMotion ? 0 : 20,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: shouldReduceMotion ? 0 : 0.8,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
+  const lineVariants = {
+    hidden: { scaleX: shouldReduceMotion ? 1 : 0 },
+    visible: {
+      scaleX: 1,
+      transition: {
+        duration: shouldReduceMotion ? 0 : 0.9,
+        delay: shouldReduceMotion ? 0 : 0.35,
+        ease: [0.16, 1, 0.3, 1] as const,
+      },
+    },
+  };
+
+  const originClass =
+    align === "center"
+      ? "origin-center mx-auto"
+      : align === "right"
+      ? "origin-right ml-auto"
+      : "origin-left";
 
   return (
-    <header
+    <motion.header
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
       className={cn(
         "relative py-8 md:py-12 transition-colors",
         align === "center" && "text-center",
@@ -36,7 +89,14 @@ export default function ChapterHeader({
       )}
     >
       {/* Chapter Indicator */}
-      <div className="flex items-center space-x-3 mb-4 text-xs font-mono uppercase tracking-widest">
+      <motion.div
+        variants={itemVariants}
+        className={cn(
+          "flex items-center space-x-3 mb-4 text-xs font-mono uppercase tracking-widest",
+          align === "center" && "justify-center",
+          align === "right" && "justify-end"
+        )}
+      >
         <span
           className={cn(
             "px-2.5 py-0.5 border text-[11px] font-medium tracking-widest",
@@ -55,33 +115,36 @@ export default function ChapterHeader({
             </span>
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* Main Chapter Title */}
-      <h2
+      <motion.h2
+        variants={itemVariants}
         className={cn(
           "font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight leading-[1.08]",
           isDark ? "text-ivory" : "text-charcoal"
         )}
       >
         {title}
-      </h2>
+      </motion.h2>
 
       {/* Expressive Sub-headline */}
       {headline && (
-        <p
+        <motion.p
+          variants={itemVariants}
           className={cn(
             "mt-3 text-xs md:text-sm font-sans uppercase tracking-[0.2em] font-medium",
             isDark ? "text-burgundy" : "text-burgundy"
           )}
         >
           {headline}
-        </p>
+        </motion.p>
       )}
 
       {/* Supporting Line in Italic Serif */}
       {supportingLine && (
-        <p
+        <motion.p
+          variants={itemVariants}
           className={cn(
             "mt-4 text-lg md:text-xl font-serif italic max-w-2xl leading-relaxed",
             align === "center" && "mx-auto",
@@ -90,19 +153,19 @@ export default function ChapterHeader({
           )}
         >
           “{supportingLine.replace(/^“|”$/g, '')}”
-        </p>
+        </motion.p>
       )}
 
-      {/* Editorial Decorative Line */}
-      <div
+      {/* Editorial Decorative Line (draws outward on scroll) */}
+      <motion.div
+        variants={lineVariants}
+        style={{ willChange: "transform" }}
         className={cn(
           "mt-6 h-[1px] w-24",
-          align === "center" && "mx-auto",
-          align === "right" && "ml-auto",
+          originClass,
           isDark ? "bg-ivory/20" : "bg-warm-grey"
         )}
       />
-    </header>
+    </motion.header>
   );
 }
-
