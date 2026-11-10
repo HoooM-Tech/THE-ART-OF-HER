@@ -1,0 +1,115 @@
+"use client";
+
+import React, { useState } from "react";
+import ChapterHeader from "../editorial/ChapterHeader";
+import FeatureLetter from "../editorial/FeatureLetter";
+import StandardLetter from "../editorial/StandardLetter";
+import EditorialQuote from "../editorial/EditorialQuote";
+import { editorialLetters } from "@/content/letters";
+import { cn } from "@/lib/utils";
+
+interface ThroughTheirEyesProps {
+  onImageClick?: (src: string) => void;
+}
+
+export default function ThroughTheirEyes({ onImageClick }: ThroughTheirEyesProps) {
+  const [selectedFilter, setSelectedFilter] = useState<string>("all");
+
+  const categories = [
+    { id: "all", label: "ALL VOICES" },
+    { id: "The Ones Who Chose Her", label: "THE ONES WHO CHOSE HER" },
+    { id: "The Ones Who Raised Her", label: "THE ONES WHO RAISED HER" },
+    { id: "The Ones Who Grew With Her", label: "THE ONES WHO GREW WITH HER" },
+    { id: "The Ones Who Admire Her", label: "THE ONES WHO ADMIRE HER" },
+  ];
+
+  const filteredLetters =
+    selectedFilter === "all"
+      ? editorialLetters
+      : editorialLetters.filter((l) => l.categoryLabel === selectedFilter);
+
+  return (
+    <section
+      id="chapter-06-letters"
+      className="py-16 md:py-28 px-4 sm:px-6 lg:px-12 bg-ivory border-b border-warm-grey"
+      aria-label="Chapter 06 — Through Their Eyes"
+    >
+      <div className="max-w-7xl mx-auto">
+        <ChapterHeader
+          number="06"
+          total="08"
+          title="Through Their Eyes"
+          subtitle="The Emotional Centerpiece"
+          headline="THE WOMAN WE KNOW."
+          supportingLine="As told by the people who love her."
+        />
+
+        {/* Editorial Categories Navigation */}
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-b border-warm-grey pb-5">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedFilter(cat.id)}
+                className={cn(
+                  "px-3.5 py-1.5 text-xs font-mono uppercase tracking-widest border transition-colors",
+                  selectedFilter === cat.id
+                    ? "bg-burgundy text-ivory border-burgundy font-semibold"
+                    : "bg-cream/40 text-taupe border-warm-grey hover:border-burgundy"
+                )}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          <span className="text-[11px] font-mono tracking-widest text-taupe uppercase">
+            6 CONTRIBUTIONS INCLUDED
+          </span>
+        </div>
+
+        {/* Editorial Letters Feed with Distinct Visual Presentations (Type A, B, C) */}
+        <div className="mt-12 space-y-12">
+          {filteredLetters.map((letter, idx) => {
+            if (letter.type === "feature") {
+              return (
+                <FeatureLetter
+                  key={letter.id}
+                  letter={letter}
+                  onImageClick={onImageClick}
+                />
+              );
+            }
+
+            if (letter.type === "pull-quote") {
+              return (
+                <div key={letter.id} className="py-8 border-y border-warm-grey my-12 bg-cream/20 px-6 sm:px-12">
+                  <div className="text-[11px] font-mono tracking-widest text-burgundy uppercase mb-2">
+                    {letter.categoryLabel}
+                  </div>
+                  <EditorialQuote
+                    quote={letter.body[0]}
+                    author={letter.contributorName}
+                    role={letter.relationship}
+                    fullViewport={false}
+                  />
+                </div>
+              );
+            }
+
+            // Standard Letter (Type B)
+            return (
+              <StandardLetter
+                key={letter.id}
+                letter={letter}
+                onImageClick={onImageClick}
+                reverse={idx % 2 === 1}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
